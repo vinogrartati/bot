@@ -11,5 +11,5 @@ func (s *Service) List() []Product {
 }
 
 func (s *Service) Get(id int) (*Product, error) {
-	return &allProducts[id], nil
+	return &allProducts[id], nil // TODO сделать обработку ошибок
 }
