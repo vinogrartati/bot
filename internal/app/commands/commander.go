@@ -39,7 +39,9 @@ func (c *Commander) HandleUpdate(update tgbotapi.Update) {
 		msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID,
 			fmt.Sprintf("Parsed: %+v\n", parsedData),
 		)
-		c.bot.Send(msg)
+		if _, err := c.bot.Send(msg); err != nil {
+			log.Printf("ошибка отправки %v", err)
+		}
 		return
 	}
 
