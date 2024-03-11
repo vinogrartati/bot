@@ -1,4 +1,4 @@
-package commands
+package products
 
 import (
 	"encoding/json"
@@ -7,9 +7,13 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (c *Commander) List(inputMessage *tgbotapi.Message) {
+func (c *ProductCommander) List(inputMessage *tgbotapi.Message) {
 	outputMsg := "Here all ths products: \n\n"
-	for _, p := range c.productService.List() {
+	products, err := c.productService.List(0, 5)
+	if err != nil {
+		log.Printf("ошибка получения товаров %v", err)
+	}
+	for _, p := range products {
 		outputMsg += p.Title
 		outputMsg += "\n"
 	}
@@ -17,7 +21,7 @@ func (c *Commander) List(inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, outputMsg)
 
 	serializedData, _ := json.Marshal(CommandData{
-		Offset: 21,
+		Offset: 5,
 	})
 
 	msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(

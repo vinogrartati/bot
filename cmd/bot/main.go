@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"bot/internal/app/commands"
+	"bot/internal/app/commands/products"
 	"bot/internal/service/product"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -31,7 +31,7 @@ func main() {
 
 	productService := product.NewService()
 
-	commander := commands.NewCommander(bot, productService)
+	commander := products.NewCommander(bot, productService)
 
 	for update := range updates {
 		commander.HandleUpdate(update)

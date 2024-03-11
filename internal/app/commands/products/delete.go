@@ -1,4 +1,4 @@
-package commands
+package products
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (c *Commander) Get(inputMessage *tgbotapi.Message) {
+func (c *ProductCommander) Delete(inputMessage *tgbotapi.Message) {
 	args := inputMessage.CommandArguments()
 
 	arg, err := strconv.Atoi(args)
@@ -16,12 +16,14 @@ func (c *Commander) Get(inputMessage *tgbotapi.Message) {
 		log.Println("wrong args", args)
 		return
 	}
-	product, err := c.productService.Get(arg)
+	p, err := c.productService.Get(arg)
 	if err != nil {
-		log.Printf("fail to get product with id %d: %v", arg, err)
+		log.Println("wrong index to delete", args)
 		return
 	}
-	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, fmt.Sprintf("product: %s", product.Title))
+
+	c.productService.Remove(arg)
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, fmt.Sprintf("product %s removed", p.Title))
 
 	if _, err := c.bot.Send(msg); err != nil {
 		log.Printf("ошибка отправки %v", err)

@@ -1,4 +1,4 @@
-package commands
+package products
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-type Commander struct {
+type ProductCommander struct {
 	bot            *tgbotapi.BotAPI
 	productService *product.Service
 }
@@ -19,14 +19,14 @@ type CommandData struct {
 	Offset int `json:"offset"`
 }
 
-func NewCommander(bot *tgbotapi.BotAPI, productService *product.Service) *Commander {
-	return &Commander{
+func NewCommander(bot *tgbotapi.BotAPI, productService *product.Service) *ProductCommander {
+	return &ProductCommander{
 		bot:            bot,
 		productService: productService,
 	}
 }
 
-func (c *Commander) HandleUpdate(update tgbotapi.Update) {
+func (c *ProductCommander) HandleUpdate(update tgbotapi.Update) {
 	defer func() {
 		if panicValue := recover(); panicValue != nil {
 			log.Printf("recovered from panic: %v\n", panicValue)
@@ -56,6 +56,12 @@ func (c *Commander) HandleUpdate(update tgbotapi.Update) {
 		c.List(update.Message)
 	case "get":
 		c.Get(update.Message)
+	case "delete":
+		c.Delete(update.Message)
+	case "create":
+		c.Create(update.Message)
+	case "edit":
+		c.Edit(update.Message)
 	default:
 		c.Default(update.Message)
 	}
