@@ -1,0 +1,2 @@
+service - domain
+product - subdomain
